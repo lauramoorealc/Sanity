@@ -26,6 +26,7 @@ import com.controlj.green.addonsupport.InvalidConnectionRequestException;
 import com.controlj.green.addonsupport.access.*;
 import com.controlj.green.addonsupport.access.aspect.PhysicalPoint;
 import com.controlj.green.addonsupport.access.aspect.PresentValue;
+import com.controlj.green.addonsupport.access.aspect.SetPointAdjust;
 import com.controlj.green.addonsupport.access.value.FloatValue;
 import com.controlj.green.addonsupport.access.value.InvalidValueException;
 
@@ -106,7 +107,8 @@ public class Controller extends HttpServlet
     and if it is a PhysicalPoint, it must be enabled.
     @author sappling
     <!==========================================================================>*/
-   private class NamedFloatValueAcceptor implements AspectAcceptor<PresentValue>
+   private class NamedFloatValueAcceptor implements AspectAcceptor<SetPointAdjust>
+
    {
       private Map<String, SanityCheckConfigEntry> map;
 
@@ -115,7 +117,7 @@ public class Controller extends HttpServlet
          this.map = map;
       }
 
-      public boolean accept(PresentValue pv)
+      public boolean accept(SetPointAdjust pv)
       {
          boolean result = false;
 
@@ -128,11 +130,11 @@ public class Controller extends HttpServlet
                if (location.hasAspect(PhysicalPoint.class))
                {
                   // Make sure it is enabled
-                  result = location.getAspect(PhysicalPoint.class).isEnabled() && pv.getValue() instanceof FloatValue;
+                  result = location.getAspect(PhysicalPoint.class).isEnabled(); //pv.getValue() instanceof FloatValue;
                }
 
                // Make sure it is an analog value
-               result &= pv.getValue() instanceof FloatValue;
+               //result &= pv.getValue() instanceof FloatValue;
             }
          }
          catch (NoSuchAspectException e)
@@ -180,10 +182,10 @@ public class Controller extends HttpServlet
                Location start = access.getTree(SystemTree.Geographic).getRoot().getDescendant(location);
 
                // Find the appropriate Analog Present Values
-               Collection<PresentValue> pvs = start.find(PresentValue.class, new NamedFloatValueAcceptor(map));
-               for (PresentValue pv : pvs)
+               Collection<SetPointAdjust> pvs = start.find(SetPointAdjust.class, new NamedFloatValueAcceptor(map));
+               for (SetPointAdjust pv : pvs)
                {
-                  FloatValue valueObj = (FloatValue) pv.getValue();
+                  FloatValue valueObj = (FloatValue) pv.getCoolingSetpointAdjust();
                   SanityCheckConfigEntry entry = map.get(pv.getLocation().getDisplayName());
                   try
                   {
