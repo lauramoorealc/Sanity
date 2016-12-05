@@ -3,7 +3,8 @@ Sanity Check - Setpoint Adjust Solution
 
 Modify Sanity Check so that it lists any Location where the Heating or Cooling Setpoint has been adjusted by an occupant.
 ```
-Example Output
+Heating Floor 09 * / HVAC / Conference *	1.0
+Cooling Floor 09 * / HVAC / Conference *	1.0
 ```
 
 Step 1.  Explore the API
