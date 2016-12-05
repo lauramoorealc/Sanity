@@ -11,7 +11,24 @@ Step 1.  Explore the API
 2. What access aspects are defined in this version? [Hint](http://alcshare.com/contentprotector/files/sdk/ver1.0.8/javadoc/index.html)
 
 Step 2. Modify NamedFloatValueAcceptor
-If you modify the NamedFloatValueAcceptor to accept SetpointAdjust instead of PresentValue, what happens when you run?
-Where else do you have to change the code in order to build and deploy the addon?
+Change the NamedFloatValueAcceptor to accept SetpointAdjust instead of PresentValue
+* where else do you need to change so the code builds and deploys?
+
+Deploy and Test
+* Adjust a Setpoint at location #floor09_hvac_conference/setpt
+* What Display name do you need to match to find this changed setpoint?
+* Did you see results?
+
+Troubleshooting
+* Add a System.out.println statement in the NamedFloatValueAcceptor
+* What locations are being matched by the Aspect?
+* How does the Physical Point Enabled check in the Acceptor interact with SetpointAdjust?
+
+
+
+
+
+
+
 
 

@@ -119,30 +119,8 @@ public class Controller extends HttpServlet
 
       public boolean accept(SetPointAdjust pv)
       {
-         boolean result = false;
-
-         try
-         {
             Location location = pv.getLocation();
-            if (map.containsKey(location.getDisplayName()))
-            {
-               // If it is a physical point
-               if (location.hasAspect(PhysicalPoint.class))
-               {
-                  // Make sure it is enabled
-                  result = location.getAspect(PhysicalPoint.class).isEnabled(); //pv.getValue() instanceof FloatValue;
-               }
-
-               // Make sure it is an analog value
-               //result &= pv.getValue() instanceof FloatValue;
-            }
-         }
-         catch (NoSuchAspectException e)
-         {
-            e.printStackTrace();
-         }
-
-         return result;
+            return map.containsKey(location.getDisplayName());
       }
    }
 
@@ -185,16 +163,23 @@ public class Controller extends HttpServlet
                Collection<SetPointAdjust> pvs = start.find(SetPointAdjust.class, new NamedFloatValueAcceptor(map));
                for (SetPointAdjust pv : pvs)
                {
-                  FloatValue valueObj = (FloatValue) pv.getCoolingSetpointAdjust();
+                  FloatValue cooling = (FloatValue) pv.getCoolingSetpointAdjust();
+                  FloatValue heating = (FloatValue) pv.getHeatingSetpointAdjust();
+
                   SanityCheckConfigEntry entry = map.get(pv.getLocation().getDisplayName());
                   try
                   {
-                     float value = valueObj.getValue();
-                     if (value > entry.getMax() || value < entry.getMin())
+                     if (heating.getValue() != 0.0)
                      {
                         results.add(new SanityResult(entry,
-                              pv.getLocation().getDisplayPath(),
-                              value));
+                                "Heating " + pv.getLocation().getDisplayPath(),
+                                   heating.getValue()));
+                     }
+                     if (cooling.getValue() != 0.0)
+                     {
+                        results.add(new SanityResult(entry,
+                                "Cooling " + pv.getLocation().getDisplayPath(),
+                                heating.getValue()));
                      }
                   }
                   catch (InvalidValueException e)
